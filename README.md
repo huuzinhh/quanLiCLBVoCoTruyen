@@ -1,3 +1,3 @@
 # quanLiCLBVoCoTruyen
 # Diagram
-![alt](https://i.imgur.com/SbLNLzd.png)
+![alt](https://i.imgur.com/Gy3Ih5e.png)
