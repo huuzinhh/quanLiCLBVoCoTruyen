@@ -15,7 +15,7 @@ public class KetNoiSQL {
     static String instance = "";
     static String serverName = "localhost";
     static String portNumber = "1433";
-    static String dbName = "quanlyktxsinhvien";
+    static String dbName = "quanLiVoSinh";
     static String userID = "sa";
     static String password = "123456";
 
@@ -51,7 +51,7 @@ public class KetNoiSQL {
             // crate statement
             Statement stmt = conn.createStatement();
             // get data from table 'student'
-            ResultSet rs = stmt.executeQuery("select * from sinhvien");
+            ResultSet rs = stmt.executeQuery("select * from voSinh");
             // show data
             while (rs.next()) {
                 System.out.println(rs.getString(1) 
@@ -63,9 +63,6 @@ public class KetNoiSQL {
                         + "  " + rs.getString(7)
                         + "  " + rs.getString(8)
                         + "  " + rs.getString(9)
-                        + "  " + rs.getString(10)
-                       
-                      //  + "  " + rs.getString(12)
                 );
             }
             // close connection
