@@ -13,7 +13,7 @@ public class KetNoiSQL {
     
     private Connection con = null;
     static String instance = "";
-    static String serverName = "DESKTOP-BMS5ORI";
+    static String serverName = "localhost";
     static String portNumber = "1433";
     static String dbName = "quanLiVoSinh";
     static String userID = "sa";

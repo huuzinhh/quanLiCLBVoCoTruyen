@@ -4,15 +4,24 @@
  */
 package jFrame;
 
+import Connector.KetNoiSQL;
+import DAO.taiKhoanDAO;
+import DAO.voSinhDAO;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import model.voSinh;
+import services.EmailTest;
+
 /**
  *
  * @author huuzinhh
  */
 public class dangNhap extends javax.swing.JFrame {
 
-    /**
-     * Creates new form dangNhap
-     */
+    String email;
+
     public dangNhap() {
         initComponents();
     }
@@ -29,8 +38,8 @@ public class dangNhap extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jTextField1 = new javax.swing.JTextField();
+        jPasswordFieldpw = new javax.swing.JPasswordField();
+        jTextFieldun = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -47,6 +56,18 @@ public class dangNhap extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel2.setText("ĐĂNG NHẬP");
 
+        jPasswordFieldpw.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordFieldpwActionPerformed(evt);
+            }
+        });
+
+        jTextFieldun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldunActionPerformed(evt);
+            }
+        });
+
         jLabel3.setText("Tên đăng nhập:");
 
         jLabel4.setText("Mật khẩu:");
@@ -59,8 +80,18 @@ public class dangNhap extends javax.swing.JFrame {
         });
 
         jButton2.setText("Đăng ký");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Quên mật khẩu à??");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -71,7 +102,7 @@ public class dangNhap extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(275, 275, 275)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1)
+                    .addComponent(jTextFieldun)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel5)
@@ -80,7 +111,7 @@ public class dangNhap extends javax.swing.JFrame {
                                 .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addComponent(jPasswordFieldpw, javax.swing.GroupLayout.Alignment.LEADING)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(125, 125, 125))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -96,7 +127,7 @@ public class dangNhap extends javax.swing.JFrame {
                 .addGap(47, 47, 47)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextFieldun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
@@ -105,7 +136,7 @@ public class dangNhap extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPasswordFieldpw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)))
@@ -131,7 +162,75 @@ public class dangNhap extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String un = jTextFieldun.getText().trim();
+        String ps = jPasswordFieldpw.getText().trim();
+
+        if (un.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên đăng nhập!");
+        } else if (ps.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu!");
+        } else {
+            try {
+                Connection conn = KetNoiSQL.getConnection();
+
+                Statement stm = conn.createStatement();
+
+                String sql = "select * from taiKhoan where tenDangNhap='" + un + "' and matKhau='" + ps + "'";
+                ResultSet rs = stm.executeQuery(sql);
+
+                if (rs.next()) {
+                    if (rs.getString("quyen").equals("Ban chủ nhiệm")) {
+                        this.email = new taiKhoanDAO().LayEmail(un);
+                        voSinh vs = new voSinhDAO().getAllThongTinVSTheoEmail(email);
+                        if (vs.getTrangThai()==0) {//0 là đã nghỉ
+                            JOptionPane.showMessageDialog(null, "Bạn đã nghỉ vui lòng kích hoạt lại tài khoản để đăng nhập !");
+                        } else {
+                            dispose();
+                            mainAdmin main = new mainAdmin();
+                            main.setVisible(true);
+                            this.email = new taiKhoanDAO().LayEmail(un);
+                            main.setnameuser(email);
+                        }
+                    } else if (rs.getString("quyen").equals("Võ Sinh")) {
+                        dispose();
+                        mainUser main = new mainUser();
+                        main.setVisible(true);
+                        this.email = new taiKhoanDAO().LayEmail(un);
+                        main.setEmail(email);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!");
+                    jTextFieldun.setText("");
+                    jPasswordFieldpw.setText("");
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        dangKy register = new dangKy();
+        register.show();       
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jPasswordFieldpwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldpwActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordFieldpwActionPerformed
+
+    private void jTextFieldunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldunActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldunActionPerformed
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        EmailTest emailtest = new EmailTest();
+        emailtest.show();
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -178,7 +277,7 @@ public class dangNhap extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField jPasswordFieldpw;
+    private javax.swing.JTextField jTextFieldun;
     // End of variables declaration//GEN-END:variables
 }
