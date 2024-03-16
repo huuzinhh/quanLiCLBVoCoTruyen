@@ -15,7 +15,7 @@ import model.banChuNhiem;
  * @author huuzinhh
  */
 public class banChuNhiemDAO {
-    public boolean KiemTraEmail(String email) {
+   public boolean KiemTraEmail(String email) {
         banChuNhiem sv = new banChuNhiem();
         Connection conn = KetNoiSQL.getConnection();
         String sql = "select * from banChuNhiem where email ='" + email + "'";
@@ -34,5 +34,33 @@ public class banChuNhiemDAO {
 
         return false;
 
-    }    
+    }  
+    public banChuNhiem getAllThongTinBCNTheoEmail(String email) {
+        banChuNhiem bcn = new banChuNhiem();
+        Connection conn = KetNoiSQL.getConnection();
+        String sql = "select * from banChuNhiem where email='" + email + "'";
+        try {
+
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                bcn.setIdsv(rs.getInt("idvs"));
+                bcn.setHoTen(rs.getString("hoTen"));
+                bcn.setNgaySinh(rs.getDate("ngaySinh"));
+                bcn.setGioiTinh(rs.getString("gioiTinh"));
+                bcn.setEmail(rs.getString("email"));
+                bcn.setSdt(rs.getString("sdt"));
+                bcn.setDiaChi(rs.getString("diaChi"));
+                bcn.setCap(rs.getInt("cap"));
+                bcn.setChucVu(rs.getString("chucVu"));
+                bcn.setTrangThai(rs.getInt("trangThai"));
+            }
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return bcn;
+    } 
 }

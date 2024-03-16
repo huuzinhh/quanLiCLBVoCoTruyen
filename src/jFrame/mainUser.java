@@ -5,12 +5,25 @@
 package jFrame;
 
 import Connector.KetNoiSQL;
+import DAO.capDaiDAO;
+import DAO.chuongTrinhHocDAO;
+import DAO.taiLieuVideoDAO;
+import java.awt.Color;
+import java.awt.Font;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.capDai;
+import model.chuongTrinhHoc;
+import model.taiLieuVideo;
+import textfield.SearchOptinEvent;
+import textfield.SearchOption;
 
 /**
  *
@@ -19,9 +32,50 @@ import javax.swing.JOptionPane;
 public class mainUser extends javax.swing.JFrame {
     private String email;
     int idvs;
+    private List<capDai> listCD;
+    private List<chuongTrinhHoc> listCTH;
+    private List<taiLieuVideo> listTLV;
+    private DefaultTableModel ModelCTH;
+    private DefaultTableModel ModelCD;
+    private DefaultTableModel ModelTLV;
+//    private DefaultTableModel TableView;
+    private int count = -1;
+
+
+
+
 
     public mainUser() {
         initComponents();
+        AddSearchCTH();
+        AddSearchCD();
+        AddSearchTL();
+        ModelCTH = (DefaultTableModel) tableCTH.getModel();
+        ModelCD = (DefaultTableModel) tableCD.getModel();
+        ModelTLV = (DefaultTableModel) tableTL.getModel();
+        showTableCTH();
+
+//        tableCTH.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+//        tableCTH.getTableHeader().setOpaque(false);
+//        tableCTH.getTableHeader().setBackground(new Color(19, 90, 118));
+//        tableCTH.getTableHeader().setForeground(new Color(225, 225, 225));        
+//        
+//        tableCD.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+//        tableCD.getTableHeader().setOpaque(false);
+//        tableCD.getTableHeader().setBackground(new Color(19, 90, 118));
+//        tableCD.getTableHeader().setForeground(new Color(225, 225, 225));
+
+//        tableTL.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+//        tableTL.getTableHeader().setOpaque(false);
+//        tableTL.getTableHeader().setBackground(new Color(19, 90, 118));
+//        tableTL.getTableHeader().setForeground(new Color(225, 225, 225)); 
+        
+        
+//        TableView = (DefaultTableModel) tableViewPhong.getModel();
+//        tableViewPhong.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+//        tableViewPhong.getTableHeader().setOpaque(false);
+//        tableViewPhong.getTableHeader().setBackground(new Color(19, 90, 118));
+//        tableViewPhong.getTableHeader().setForeground(new Color(225, 225, 225));
     }
     private int width=180;
     private int height=630;
@@ -42,7 +96,7 @@ public class mainUser extends javax.swing.JFrame {
             }
         }).start();
     }
-        void closeMenu(){
+    void closeMenu(){
         new Thread(new Runnable(){
             @Override
             public void run() {
@@ -101,16 +155,16 @@ public class mainUser extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanelThongTinCD = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        txtSearch1 = new textfield.TextFieldSearchOption();
+        tableCD = new javax.swing.JTable();
+        txtSearchCD = new textfield.TextFieldSearchOption();
         jPanelThongTinTL = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
-        txtSearch2 = new textfield.TextFieldSearchOption();
+        tableTL = new javax.swing.JTable();
+        txtSearchTL = new textfield.TextFieldSearchOption();
         jPanelThongTinCTTL = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
-        txtSearch3 = new textfield.TextFieldSearchOption();
+        tableCTH = new javax.swing.JTable();
+        txtSearchCTH = new textfield.TextFieldSearchOption();
         jPanel3 = new javax.swing.JPanel();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
@@ -297,7 +351,7 @@ public class mainUser extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.CardLayout());
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tableCD.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -308,11 +362,11 @@ public class mainUser extends javax.swing.JFrame {
                 "Cấp", "Bậc", "Màu đai", "Danh Xưng", "Thời Gian"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tableCD);
 
-        txtSearch1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtSearchCD.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtSearch1KeyReleased(evt);
+                txtSearchCDKeyReleased(evt);
             }
         });
 
@@ -323,19 +377,19 @@ public class mainUser extends javax.swing.JFrame {
             .addComponent(jScrollPane2)
             .addGroup(jPanelThongTinCDLayout.createSequentialGroup()
                 .addGap(493, 674, Short.MAX_VALUE)
-                .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtSearchCD, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelThongTinCDLayout.setVerticalGroup(
             jPanelThongTinCDLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelThongTinCDLayout.createSequentialGroup()
-                .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearchCD, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel2.add(jPanelThongTinCD, "card2");
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tableTL.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -346,11 +400,11 @@ public class mainUser extends javax.swing.JFrame {
                 "Tên Bài", "link"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(tableTL);
 
-        txtSearch2.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtSearchTL.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtSearch2KeyReleased(evt);
+                txtSearchTLKeyReleased(evt);
             }
         });
 
@@ -361,19 +415,19 @@ public class mainUser extends javax.swing.JFrame {
             .addComponent(jScrollPane3)
             .addGroup(jPanelThongTinTLLayout.createSequentialGroup()
                 .addGap(493, 674, Short.MAX_VALUE)
-                .addComponent(txtSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtSearchTL, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelThongTinTLLayout.setVerticalGroup(
             jPanelThongTinTLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelThongTinTLLayout.createSequentialGroup()
-                .addComponent(txtSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearchTL, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel2.add(jPanelThongTinTL, "card2");
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        tableCTH.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -384,11 +438,11 @@ public class mainUser extends javax.swing.JFrame {
                 "Cấp", "Quyền", "Thế", "Thể Lực", "Lí Luận Võ Học", "Lí Luận Võ Đạo"
             }
         ));
-        jScrollPane4.setViewportView(jTable4);
+        jScrollPane4.setViewportView(tableCTH);
 
-        txtSearch3.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtSearchCTH.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtSearch3KeyReleased(evt);
+                txtSearchCTHKeyReleased(evt);
             }
         });
 
@@ -399,13 +453,13 @@ public class mainUser extends javax.swing.JFrame {
             .addComponent(jScrollPane4)
             .addGroup(jPanelThongTinCTTLLayout.createSequentialGroup()
                 .addGap(493, 674, Short.MAX_VALUE)
-                .addComponent(txtSearch3, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtSearchCTH, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelThongTinCTTLLayout.setVerticalGroup(
             jPanelThongTinCTTLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelThongTinCTTLLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(txtSearch3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearchCTH, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -440,9 +494,9 @@ public class mainUser extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jButton6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton8)
                 .addGap(0, 643, Short.MAX_VALUE))
@@ -452,9 +506,9 @@ public class mainUser extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(0, 17, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
                     .addComponent(jButton7)
-                    .addComponent(jButton8)))
+                    .addComponent(jButton8)
+                    .addComponent(jButton6)))
         );
 
         jPanelThongTin.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 950, 40));
@@ -492,13 +546,13 @@ public class mainUser extends javax.swing.JFrame {
 
         jTable5.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "IDVS", "Cấp", "Đợt Thi", "Điểm Quyền", "Điểm Thế", "Điểm Thể Lực", "Điểm Lí Thuyết", "Kết Quả"
+                "Cấp", "Đợt Thi", "Điểm Quyền", "Điểm Thế", "Điểm Thể Lực", "Điểm Lí Thuyết", "Kết Quả"
             }
         ));
         jScrollPane5.setViewportView(jTable5);
@@ -863,23 +917,63 @@ public class mainUser extends javax.swing.JFrame {
         jPanelThongTinTK.setVisible(false);
     }//GEN-LAST:event_jLabel8MouseClicked
 
-    private void txtSearch1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearch1KeyReleased
+    private void txtSearchCDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchCDKeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSearch1KeyReleased
+                if (txtSearchCD.isSelected()) {
+            int option = txtSearchCD.getSelectedIndex();
+            String textsearch = txtSearchCD.getText().trim();
+            if (option == 0) {
+                showTableCD("cap", textsearch);
+            } else if (option == 1) {
+                showTableCD("bac", textsearch);
+            } else if (option == 2) {
+                showTableCD("mauDai", textsearch);
+            } else if (option == 3) {
+                showTableCD("danhXung", textsearch);
+            } else if (option == 4) {
+                showTableCD("thoiGian", textsearch);
+            }
+        }
+    }//GEN-LAST:event_txtSearchCDKeyReleased
 
-    private void txtSearch2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearch2KeyReleased
+    private void txtSearchTLKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchTLKeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSearch2KeyReleased
+                if (txtSearchTL.isSelected()) {
+            int option = txtSearchTL.getSelectedIndex();
+            String textsearch = txtSearchTL.getText().trim();
+            if (option == 0) {
+                showTableCD("tenBai", textsearch);
+            }
+        }        
+    }//GEN-LAST:event_txtSearchTLKeyReleased
 
-    private void txtSearch3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearch3KeyReleased
+    private void txtSearchCTHKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchCTHKeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSearch3KeyReleased
+                if (txtSearchCTH.isSelected()) {
+            int option = txtSearchCTH.getSelectedIndex();
+            String textsearch = txtSearchCTH.getText().trim();
+            if (option == 0) {
+                showTableCD("cap", textsearch);
+            } else if (option == 1) {
+                showTableCD("quyen", textsearch);
+            } else if (option == 2) {
+                showTableCD("the", textsearch);
+            } else if (option == 3) {
+                showTableCD("theLuc", textsearch);
+            } else if (option == 4) {
+                showTableCD("liLuanVoHoc", textsearch);
+            }else if (option == 5) {
+                showTableCD("liLuanVoDao", textsearch);
+            }
+        }        
+    }//GEN-LAST:event_txtSearchCTHKeyReleased
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         jPanelThongTinCD.setVisible(true);
         jPanelThongTinCTTL.setVisible(false);
         jPanelThongTinTL.setVisible(false);
+        showTableCD();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -887,6 +981,7 @@ public class mainUser extends javax.swing.JFrame {
         jPanelThongTinCD.setVisible(false);
         jPanelThongTinCTTL.setVisible(true);
         jPanelThongTinTL.setVisible(false);
+        showTableCTH();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -894,6 +989,7 @@ public class mainUser extends javax.swing.JFrame {
         jPanelThongTinCD.setVisible(false);
         jPanelThongTinCTTL.setVisible(false);
         jPanelThongTinTL.setVisible(true);
+        showTableTL();
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void txtSearch4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearch4KeyReleased
@@ -1032,17 +1128,134 @@ public class mainUser extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable5;
     private javax.swing.JTable jTable6;
     private javax.swing.JTable jTable7;
+    private javax.swing.JTable tableCD;
+    private javax.swing.JTable tableCTH;
+    private javax.swing.JTable tableTL;
     private textfield.TextFieldSearchOption txtSearch;
-    private textfield.TextFieldSearchOption txtSearch1;
-    private textfield.TextFieldSearchOption txtSearch2;
-    private textfield.TextFieldSearchOption txtSearch3;
     private textfield.TextFieldSearchOption txtSearch4;
+    private textfield.TextFieldSearchOption txtSearchCD;
+    private textfield.TextFieldSearchOption txtSearchCTH;
+    private textfield.TextFieldSearchOption txtSearchTL;
     private javax.swing.JLabel txtusername;
     // End of variables declaration//GEN-END:variables
+
+   void showTableCTH() {
+        listCTH = new chuongTrinhHocDAO().getAllThongTinCTH();        
+        ModelCTH.setRowCount(0);
+        for (chuongTrinhHoc cth : listCTH) {
+            int sl = new chuongTrinhHocDAO().SoLuongCTH();
+            ModelCTH.addRow(new Object[]{
+                cth.getCap(),cth.getQuyen(),cth.getThe(),cth.getTheLuc(),cth.getLiLuanVoHoc(),cth.getLiLuanVoDao()
+            });
+        }
+        count = -1;
+    }
+
+     private void showTableCTH(String where, String text) {
+        listCTH = new chuongTrinhHocDAO().getAllThongTinCTHSearch( where,  text);        
+        ModelCTH.setRowCount(0);
+        for (chuongTrinhHoc cth : listCTH) {
+            int sl = new chuongTrinhHocDAO().SoLuongCTH();
+            ModelCTH.addRow(new Object[]{
+                cth.getCap(),cth.getQuyen(),cth.getThe(),cth.getTheLuc(),cth.getLiLuanVoHoc(),cth.getLiLuanVoDao()
+            });
+        }
+    }
+
+//     private void showTableViewCTH(String maPhong) {
+//        listsinhvien = new SinhVienDAO().getAllThongTinSVTheoPhong(maPhong);
+//        TableView.setRowCount(0);
+//        for (ThongTinSinhVien sv : listsinhvien) {
+//            TableView.addRow(new Object[]{
+//                sv.getMaSV(), sv.getTenSV(), sv.getCCCD(), sv.getGioiTinh(), sv.getNgaySinh(), sv.getMaLop(), sv.getSoDienThoai()
+//            });
+//        }
+//    }
+   void showTableCD() {
+        listCD = new capDaiDAO().getAllThongTinCD();        
+        ModelCD.setRowCount(0);
+        for (capDai cd : listCD) {
+            int sl = new capDaiDAO().SoLuongCD();
+            ModelCD.addRow(new Object[]{
+                cd.getCap(),cd.getBac(),cd.getMauDai(),cd.getDanhXung(),cd.getThoiGian()
+            });
+        }
+        count = -1;
+    }
+
+     private void showTableCD(String where, String text) {
+        listCD = new capDaiDAO().getAllThongTinCDSearch( where,  text);             
+        ModelCD.setRowCount(0);
+        for (capDai cd : listCD) {
+            int sl = new capDaiDAO().SoLuongCD();
+            ModelCD.addRow(new Object[]{
+                cd.getCap(),cd.getBac(),cd.getMauDai(),cd.getDanhXung(),cd.getThoiGian()
+            });
+        }
+    }   
+     void showTableTL() {
+        listTLV = new taiLieuVideoDAO().getAllThongTinTLV();        
+        ModelTLV.setRowCount(0);
+        for (taiLieuVideo tlv : listTLV) {
+            int sl = new taiLieuVideoDAO().SoLuongTLV();
+            ModelTLV.addRow(new Object[]{
+                tlv.getId(),tlv.getTenBai(),tlv.getLinkVideo()
+            });
+        }
+        count = -1;
+    }
+
+     private void showTableTLV(String where, String text) {
+        listTLV = new taiLieuVideoDAO().getAllThongTinTLVSearch( where,  text);    
+        ModelTLV.setRowCount(0);
+        for (taiLieuVideo tlv : listTLV) {
+            int sl = new taiLieuVideoDAO().SoLuongTLV();
+            ModelTLV.addRow(new Object[]{
+                tlv.getId(),tlv.getTenBai(),tlv.getLinkVideo()
+            });
+        }
+    }
+    void AddSearchCTH() {
+        txtSearchCD.addEventOptionSelected(new SearchOptinEvent() {
+            @Override
+            public void optionSelected(SearchOption option, int index) {
+                txtSearchCD.setHint("Tìm kiếm " + option.getName() + "....");
+            }
+        });
+        txtSearchCD.addOption(new SearchOption("cấp", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("quyền", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("thế", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("thể lực", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("Lí luận võ học", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("Lí luận võ đạo", new ImageIcon(getClass().getResource("/img/user.png"))));
+
+    }
+    void AddSearchCD() {
+        txtSearchCD.addEventOptionSelected(new SearchOptinEvent() {
+            @Override
+            public void optionSelected(SearchOption option, int index) {
+                txtSearchCD.setHint("Tìm kiếm " + option.getName() + "....");
+            }
+        });
+        txtSearchCD.addOption(new SearchOption("cấp", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("bậc", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("màu đai", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("danh xưng", new ImageIcon(getClass().getResource("/img/user.png"))));
+        txtSearchCD.addOption(new SearchOption("thời gian", new ImageIcon(getClass().getResource("/img/user.png"))));
+
+    }
+    void AddSearchTL() {
+        txtSearchCD.addEventOptionSelected(new SearchOptinEvent() {
+            @Override
+            public void optionSelected(SearchOption option, int index) {
+                txtSearchCD.setHint("Tìm kiếm " + option.getName() + "....");
+            }
+        });
+        txtSearchCD.addOption(new SearchOption("tên bài", new ImageIcon(getClass().getResource("/img/user.png"))));
+
+
+    }    
 }

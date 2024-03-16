@@ -11,6 +11,7 @@ package model;
 public class diem {
         private int id;
         private int idvs;
+        private int cap;
         private String dotThi;
         private Float diemQuyen;
         private Float diemThe;
@@ -21,9 +22,10 @@ public class diem {
     public diem() {
     }
 
-    public diem(int id, int idvs, String dotThi, Float diemQuyen, Float diemThe, Float diemTheLuc, Float diemLiThuyet, boolean ketQua) {
+    public diem(int id, int idvs, int cap, String dotThi, Float diemQuyen, Float diemThe, Float diemTheLuc, Float diemLiThuyet, boolean ketQua) {
         this.id = id;
         this.idvs = idvs;
+        this.cap = cap;
         this.dotThi = dotThi;
         this.diemQuyen = diemQuyen;
         this.diemThe = diemThe;
@@ -46,6 +48,14 @@ public class diem {
 
     public void setIdvs(int idvs) {
         this.idvs = idvs;
+    }
+
+    public int getCap() {
+        return cap;
+    }
+
+    public void setCap(int cap) {
+        this.cap = cap;
     }
 
     public String getDotThi() {
@@ -95,5 +105,6 @@ public class diem {
     public void setKetQua(boolean ketQua) {
         this.ketQua = ketQua;
     }
+
         
 }

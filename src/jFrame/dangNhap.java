@@ -5,12 +5,14 @@
 package jFrame;
 
 import Connector.KetNoiSQL;
+import DAO.banChuNhiemDAO;
 import DAO.taiKhoanDAO;
 import DAO.voSinhDAO;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
+import model.banChuNhiem;
 import model.voSinh;
 import services.EmailTest;
 
@@ -181,8 +183,8 @@ public class dangNhap extends javax.swing.JFrame {
                 if (rs.next()) {
                     if (rs.getString("quyen").equals("Ban chủ nhiệm")) {
                         this.email = new taiKhoanDAO().LayEmail(un);
-                        voSinh vs = new voSinhDAO().getAllThongTinVSTheoEmail(email);
-                        if (vs.getTrangThai()==0) {//0 là đã nghỉ
+                        banChuNhiem vs = new banChuNhiemDAO().getAllThongTinBCNTheoEmail(email);
+                        if (vs.getTrangThai()==1) {//0 là đã nghỉ
                             JOptionPane.showMessageDialog(null, "Bạn đã nghỉ vui lòng kích hoạt lại tài khoản để đăng nhập !");
                         } else {
                             dispose();
